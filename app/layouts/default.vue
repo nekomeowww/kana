@@ -1,9 +1,16 @@
+<script setup lang="ts">
+const { backgroundColor } = useAppBackground()
+</script>
+
 <template>
-  <main class="px-10 py-20 text-center">
-    <slot />
+  <div
+    :style="{ backgroundColor }"
+    class="mx-auto h-full max-w-[1200px] w-full flex flex-col"
+    transition="all ease-in-out" duration-1000
+  >
+    <main h-full w-full flex-1>
+      <slot />
+    </main>
     <Footer />
-    <div class="mx-auto mt-5 text-center text-sm opacity-25">
-      [Default Layout]
-    </div>
-  </main>
+  </div>
 </template>

@@ -1,0 +1,20 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - antfu
+  - consola
+  - dakuten
+  - handakuten
+  - iconify
+  - nuxi
+  - nuxt
+  - nuxtjs
+  - pinia
+  - romaji
+  - typecheck
+  - unocss
+  - vueuse
+ignoreWords: []
+import: []
