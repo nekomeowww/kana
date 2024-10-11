@@ -6,6 +6,7 @@ const hiraganaOn = ref(true)
 const katakanaOn = ref(false)
 const monographOn = ref(true)
 const digraphOn = ref(false)
+const unvoicedOn = ref(true)
 const dakutenOn = ref(false)
 const handakutenOn = ref(false)
 
@@ -35,21 +36,40 @@ const { speak } = useSpeechSynthesis(speakingChar, {
 
 const charTable = computed(() => {
   let table: Kana[] = []
-  if (hiraganaOn.value)
-    table = table.concat(hiragana)
-  if (katakanaOn.value)
-    table = table.concat(katakana)
+  if (hiraganaOn.value) {
+    table.push(...hiragana)
+  }
+  if (katakanaOn.value) {
+    table.push(...katakana)
+  }
 
-  return table.filter((char) => {
-    return (monographOn.value && char.category.includes('monograph'))
-      || (!monographOn.value && !char.category.includes('monograph'))
-      || (digraphOn.value && char.category.includes('digraph'))
-      || (!digraphOn.value && !char.category.includes('digraph'))
-      || (dakutenOn.value && char.category.includes('dakuten'))
-      || (!dakutenOn.value && !char.category.includes('dakuten'))
-      || (handakutenOn.value && char.category.includes('handakuten'))
-      || (!handakutenOn.value && !char.category.includes('handakuten'))
-  })
+  const requiredCategory: string[] = []
+  if (monographOn.value) {
+    requiredCategory.push('monograph')
+  }
+  if (digraphOn.value) {
+    requiredCategory.push('digraph')
+  }
+
+  const requiredVoicing: string[] = []
+  if (unvoicedOn.value) {
+    requiredVoicing.push('unvoiced')
+  }
+  if (dakutenOn.value) {
+    requiredVoicing.push('dakuten')
+  }
+  if (handakutenOn.value) {
+    requiredVoicing.push('handakuten')
+  }
+
+  if (requiredCategory.length > 0) {
+    table = table.filter(char => requiredCategory.some(category => char.category.includes(category)))
+  }
+  if (requiredVoicing.length > 0) {
+    table = table.filter(char => requiredVoicing.some(voicing => char.category.includes(voicing)))
+  }
+
+  return table
 })
 
 function getRandomPracticingChar() {
@@ -161,12 +181,12 @@ const families = ['∅', 'k', 's', 't', 'n', 'h', 'm', 'y', 'r', 'w', 'g', 'z', 
 
 function getCharsByFamily(family: string, type: 'monograph' | 'digraph') {
   return charTable.value.filter(char =>
-    char.family[0]!.toLowerCase() === family
+    char.alphabetColumn[0]!.toLowerCase() === family
     && char.category.includes(type),
   )
 }
 
-watch([hiraganaOn, katakanaOn, monographOn, digraphOn, dakutenOn, handakutenOn], () => {
+watch([hiraganaOn, katakanaOn, monographOn, digraphOn, unvoicedOn, dakutenOn, handakutenOn], () => {
   currentChar.value = getRandomPracticingChar()
 })
 
@@ -213,6 +233,15 @@ onMounted(() => {
       >
         <input v-model="digraphOn" type="checkbox" invisible appearance-none>
         <span>きゃ</span>
+      </label>
+      <label
+        :class="[unvoicedOn ? '' : 'text-neutral-200 dark:text-neutral-700']"
+        cursor-pointer
+        transition="all ease-in-out" duration-500
+        title="清音"
+      >
+        <input v-model="unvoicedOn" type="checkbox" invisible appearance-none>
+        <span>清音</span>
       </label>
       <label
         :class="[dakutenOn ? '' : 'text-neutral-200 dark:text-neutral-700']"
