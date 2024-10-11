@@ -171,7 +171,7 @@ function isEnabled(char: Kana) {
     (monographOn.value && char.category.includes('monograph'))
     || (digraphOn.value && char.category.includes('digraph'))
   ) && (
-    (!dakutenOn.value && !handakutenOn.value)
+    (unvoicedOn.value && char.category.includes('unvoiced'))
     || (dakutenOn.value && char.category.includes('dakuten'))
     || (handakutenOn.value && char.category.includes('handakuten'))
   )
@@ -267,39 +267,39 @@ onMounted(() => {
       <div
         v-if="charTableView"
         :class="charTableView ? 'opacity-100' : 'opacity-0'"
-        absolute bg="white dark:[#222]" w-250
+        bg="white dark:[#222]"
         transition="all ease-in-out"
-        duration-500
+        absolute w-250 w-fit duration-500
       >
-        <div class="grid grid-cols-[auto_1fr_1fr] gap-px border border-neutral-200 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-700">
-          <div class="bg-white p-2 font-bold dark:bg-neutral-800" />
-          <div class="bg-white p-2 font-bold dark:bg-neutral-800">
+        <div class="grid grid-cols-[2rem_auto_auto] gap-px border border-neutral-200 rounded-xl p-2 shadow-sm">
+          <div class="p-2 font-bold" />
+          <div class="w-fit p-2 font-bold">
             Monograph
           </div>
-          <div class="bg-white p-2 font-bold dark:bg-neutral-800">
+          <div class="w-fit p-2 font-bold">
             Digraph
           </div>
 
           <template v-for="family in families" :key="family">
-            <div class="bg-white p-2 font-bold dark:bg-neutral-800">
+            <div class="p-2 font-bold">
               {{ family }}
             </div>
-            <div class="bg-white p-2 dark:bg-neutral-800">
+            <div class="min-w-10rem w-fit p-2 text-nowrap">
               <span
                 v-for="char in getCharsByFamily(family, 'monograph')"
                 :key="char.writing"
-                class="mr-2" :class="[
+                :class="[
                   isEnabled(char) ? 'text-inherit dark:text-inherit' : 'text-neutral-300 dark:text-neutral-600',
                 ]"
               >
                 {{ char.writing }}
               </span>
             </div>
-            <div class="bg-white p-2 dark:bg-neutral-800">
+            <div class="min-w-10rem w-fit p-2 text-nowrap">
               <span
                 v-for="char in getCharsByFamily(family, 'digraph')"
                 :key="char.writing"
-                class="mr-2" :class="[
+                :class="[
                   isEnabled(char) ? 'text-inherit dark:text-inherit' : 'text-neutral-300 dark:text-neutral-600',
                 ]"
               >
