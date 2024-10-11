@@ -12,12 +12,6 @@ const handakutenOn = ref(false)
 
 const charTableView = ref(true)
 
-const input = ref<string>('')
-
-const hint = ref(false)
-const correctness = ref(false)
-const showCorrectness = ref(false)
-
 const currentChar = ref<Kana | null>(null)
 const userProfile = reactive<{
   characters: Record<string, {
@@ -142,24 +136,6 @@ async function checkAnswer(isCorrect: boolean) {
   }
   if (isCorrect) {
     currentChar.value = getRandomPracticingChar()
-
-    input.value = ''
-    hint.value = false
-    correctness.value = true
-    showCorrectness.value = true
-
-    setTimeout(() => {
-      showCorrectness.value = false
-    }, 500)
-  }
-  else {
-    hint.value = true
-    correctness.value = false
-    showCorrectness.value = true
-
-    setTimeout(() => {
-      showCorrectness.value = false
-    }, 500)
   }
 }
 
@@ -310,38 +286,13 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div v-if="currentChar" flex flex-1 items-center>
-      <div w-fit flex flex-col items-center gap-4>
-        <div v-if="currentChar" :key="currentChar.writing">
-          <div w-fit font-japanese @click="hint = true">
-            <span text="4em">{{ currentChar.writing }}</span>
-          </div>
-          <div
-            :class="hint ? 'op-100' : 'op-0'"
-            text="center neutral-500 dark:neutral-400"
-            transition="all ease-in-out" duration-500
-          >
-            {{ currentChar.romaji }}
-          </div>
-        </div>
-        <form mb-2 @submit.prevent="checkAnswer(input.toLowerCase().trim() === currentChar.romaji.toLowerCase())">
-          <input
-            v-model="input"
-            :class="[
-              showCorrectness
-                ? correctness
-                  ? 'border-green-500 dark:border-green-600'
-                  : 'border-red-500 dark:border-red-600'
-                : 'border-neutral-300 dark:border-neutral-600',
-            ]"
-            bg="transparent"
-            border="b-2"
-            transition="all ease-in-out"
-            autofocus w-full appearance-none px-4 pb-1 pt-2 text-center text-lg outline-none duration-500
-          >
-        </form>
-      </div>
-    </div>
+    <RomajiInput
+      v-if="currentChar"
+      :current="currentChar"
+      flex
+      flex-1 items-center
+      @check-answer="checkAnswer"
+    />
     <div v-else flex flex-1 items-center>
       <p>No characters!</p>
     </div>
