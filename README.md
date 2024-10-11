@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nekomeowww/kana/refs/heads/main/public/favicon.svg?token=GHSAT0AAAAAACW62ND5PL2T7I2ZS4SDERIYZYJOF7A">
+  <img src="./public/favicon.svg">
 </p>
 
 <h1 align="center">Kana</h1>
