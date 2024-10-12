@@ -172,8 +172,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div h-full w-full flex flex-col items-center justify-center>
-    <div flex gap-4 px-2 py-6>
+  <div
+    h-full w-full flex flex-col items-center justify-center
+  >
+    <div flex gap="1 sm:2 md:4">
       <label
         :class="[hiraganaOn ? '' : 'text-neutral-200 dark:text-neutral-700']"
         transition="all ease-in-out"

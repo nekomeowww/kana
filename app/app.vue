@@ -17,7 +17,7 @@ useHead({
 html,
 body,
 #__nuxt {
-  height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   overscroll-behavior: none;
