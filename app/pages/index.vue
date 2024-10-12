@@ -29,38 +29,30 @@ const { speak } = useSpeechSynthesis(speakingChar, {
 })
 
 const charTable = computed(() => {
-  let table: Kana[] = []
+  const all: Kana[] = []
   if (hiraganaOn.value) {
-    table.push(...hiragana)
+    all.push(...hiragana)
   }
   if (katakanaOn.value) {
-    table.push(...katakana)
+    all.push(...katakana)
   }
 
-  const requiredCategory: string[] = []
-  if (monographOn.value) {
-    requiredCategory.push('monograph')
+  let table: Kana[] = [...all]
+  if (!monographOn.value) {
+    table = table.filter(char => !char.category.includes('monograph'))
   }
-  if (digraphOn.value) {
-    requiredCategory.push('digraph')
-  }
-
-  const requiredVoicing: string[] = []
-  if (unvoicedOn.value) {
-    requiredVoicing.push('unvoiced')
-  }
-  if (dakutenOn.value) {
-    requiredVoicing.push('dakuten')
-  }
-  if (handakutenOn.value) {
-    requiredVoicing.push('handakuten')
+  if (!digraphOn.value) {
+    table = table.filter(char => !char.category.includes('digraph'))
   }
 
-  if (requiredCategory.length > 0) {
-    table = table.filter(char => requiredCategory.some(category => char.category.includes(category)))
+  if (!unvoicedOn.value) {
+    table = table.filter(char => !char.category.includes('unvoiced'))
   }
-  if (requiredVoicing.length > 0) {
-    table = table.filter(char => requiredVoicing.some(voicing => char.category.includes(voicing)))
+  if (!dakutenOn.value) {
+    table = table.filter(char => !char.category.includes('dakuten'))
+  }
+  if (!handakutenOn.value) {
+    table = table.filter(char => !char.category.includes('handakuten'))
   }
 
   return table
@@ -174,6 +166,7 @@ onMounted(() => {
 <template>
   <div
     h-full w-full flex flex-col items-center justify-center
+    text="neutral-900 dark:neutral-100"
   >
     <div flex gap="1 sm:2 md:4">
       <label
